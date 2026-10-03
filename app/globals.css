@@ -24,3 +24,183 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* =========================================================
+   PURANA FULLCALENDAR
+   ========================================================= */
+
+.calendar-container {
+  --fc-border-color: rgba(83, 62, 35, 0.1);
+  --fc-button-text-color: #533e23;
+  --fc-button-bg-color: #ffffff;
+  --fc-button-border-color: rgba(83, 62, 35, 0.12);
+  --fc-button-hover-bg-color: #f5f3ea;
+  --fc-button-hover-border-color: rgba(47, 93, 57, 0.2);
+  --fc-button-active-bg-color: #2f5d39;
+  --fc-button-active-border-color: #2f5d39;
+  --fc-button-active-text-color: #ffffff;
+  --fc-today-bg-color: rgba(239, 233, 197, 0.45);
+  --fc-now-indicator-color: #c14c38;
+}
+
+/* Toolbar */
+
+.calendar-container .fc .fc-toolbar {
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.calendar-container .fc .fc-toolbar-title {
+  color: #2f5d39;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+/* Buttons */
+
+.calendar-container .fc .fc-button {
+  border-radius: 0.65rem;
+  border-width: 1px;
+  box-shadow: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.calendar-container .fc .fc-button-primary {
+  background-color: #ffffff;
+  border-color: rgba(83, 62, 35, 0.12);
+  color: #533e23;
+}
+
+.calendar-container .fc .fc-button-primary:hover {
+  background-color: #f5f3ea;
+  border-color: rgba(47, 93, 57, 0.2);
+  color: #2f5d39;
+}
+
+.calendar-container .fc .fc-button-primary:not(:disabled).fc-button-active,
+.calendar-container .fc .fc-button-primary:not(:disabled):active {
+  background-color: #2f5d39;
+  border-color: #2f5d39;
+  color: #ffffff;
+}
+
+.calendar-container .fc .fc-button:focus {
+  box-shadow: 0 0 0 3px rgba(47, 93, 57, 0.12);
+}
+
+/* Previous / Next buttons */
+
+.calendar-container .fc .fc-prev-button,
+.calendar-container .fc .fc-next-button {
+  padding-left: 0.65rem;
+  padding-right: 0.65rem;
+}
+
+/* Today button */
+
+.calendar-container .fc .fc-today-button {
+  margin-left: 0.35rem;
+}
+
+/* Calendar header */
+
+.calendar-container .fc .fc-col-header-cell {
+  background-color: #f5f3ea;
+}
+
+.calendar-container .fc .fc-col-header-cell-cushion {
+  color: #533e23;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.75rem 0.5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Day numbers */
+
+.calendar-container .fc .fc-daygrid-day-number {
+  color: #533e23;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.6rem;
+  text-decoration: none;
+}
+
+/* Time labels */
+
+.calendar-container .fc .fc-timegrid-slot-label-cushion {
+  color: rgba(83, 62, 35, 0.55);
+  font-size: 0.72rem;
+}
+
+/* Calendar grid */
+
+.calendar-container .fc-theme-standard td,
+.calendar-container .fc-theme-standard th {
+  border-color: rgba(83, 62, 35, 0.1);
+}
+
+/* Today */
+
+.calendar-container .fc .fc-day-today {
+  background-color: rgba(239, 233, 197, 0.45) !important;
+}
+
+/* Current time indicator */
+
+.calendar-container .fc .fc-timegrid-now-indicator-line {
+  border-color: #c14c38;
+  border-width: 2px;
+}
+
+.calendar-container .fc .fc-timegrid-now-indicator-arrow {
+  border-bottom-color: #c14c38;
+  border-top-color: #c14c38;
+}
+
+/* Hover over time slots */
+
+.calendar-container .fc .fc-timegrid-slot:hover {
+  background-color: rgba(245, 243, 234, 0.6);
+}
+
+/* Month view day cells */
+
+.calendar-container .fc .fc-daygrid-day {
+  transition: background-color 0.15s ease;
+}
+
+.calendar-container .fc .fc-daygrid-day:hover {
+  background-color: rgba(245, 243, 234, 0.5);
+}
+
+/* Remove excessive focus outline */
+
+.calendar-container .fc a:focus {
+  outline: none;
+}
+
+/* Responsive toolbar */
+
+@media (max-width: 768px) {
+  .calendar-container .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendar-container .fc .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+  }
+
+  .calendar-container .fc .fc-toolbar-title {
+    font-size: 1.15rem;
+  }
+}

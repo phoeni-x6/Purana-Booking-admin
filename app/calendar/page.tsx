@@ -29,7 +29,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Calendar */}
-      <div className="overflow-hidden rounded-2xl border border-purana-brown/10 bg-white shadow-sm">
+      <div className="calendar-container overflow-hidden rounded-2xl border border-purana-brown/10 bg-white shadow-sm">
         <div className="p-4 sm:p-6">
           <FullCalendar
             plugins={[
@@ -51,6 +51,10 @@ export default function CalendarPage() {
             }}
             height="auto"
             nowIndicator={true}
+            allDaySlot={false}
+            slotMinTime="07:00:00"
+            slotMaxTime="21:00:00"
+            slotDuration="00:30:00"
           />
         </div>
       </div>
