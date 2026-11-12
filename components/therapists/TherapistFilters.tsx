@@ -9,6 +9,7 @@ type TherapistFiltersProps = {
   onSearchChange: (value: string) => void;
   onStatusChange: (value: string) => void;
   onSpecializationChange: (value: string) => void;
+  specializations: string[];
 };
 
 export default function TherapistFilters({
@@ -18,6 +19,7 @@ export default function TherapistFilters({
   onSearchChange,
   onStatusChange,
   onSpecializationChange,
+  specializations,
 }: TherapistFiltersProps) {
   return (
     <div className="mb-6 rounded-2xl border border-purana-brown/10 bg-white p-4 shadow-sm">
@@ -53,18 +55,7 @@ export default function TherapistFilters({
             className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-purana-brown outline-none focus:border-purana-green"
           >
             <option value="All">All Specializations</option>
-            <option value="Ayurvedic Massage">
-              Ayurvedic Massage
-            </option>
-            <option value="Ayurvedic Therapy">
-              Ayurvedic Therapy
-            </option>
-            <option value="Consultation">
-              Consultation
-            </option>
-            <option value="Yoga & Meditation">
-              Yoga & Meditation
-            </option>
+            {specializations.map((item) => <option key={item} value={item}>{item}</option>)}
           </select>
         </div>
 
@@ -76,7 +67,6 @@ export default function TherapistFilters({
         >
           <option value="All">All Statuses</option>
           <option value="Active">Active</option>
-          <option value="On Leave">On Leave</option>
           <option value="Inactive">Inactive</option>
         </select>
       </div>

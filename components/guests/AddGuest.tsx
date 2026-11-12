@@ -1,194 +1,73 @@
 "use client";
 
+import { useState } from "react";
 import { X } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import type { Guest } from "./GuestTable";
 
 type AddGuestProps = {
+  guestTypes: string[];
+  guest?: Guest;
   onClose: () => void;
+  onSaved: () => void;
 };
 
-export default function AddGuest({ onClose }: AddGuestProps) {
+export default function AddGuest({ guestTypes, guest, onClose, onSaved }: AddGuestProps) {
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
+
+  async function saveGuest(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    setError(null);
+    const form = new FormData(event.currentTarget);
+    const values = {
+      first_name: String(form.get("first_name") ?? "").trim(),
+      last_name: String(form.get("last_name") ?? "").trim(),
+      email: String(form.get("email") ?? "").trim() || null,
+      phone: String(form.get("phone") ?? "").trim() || null,
+      guest_type: String(form.get("guest_type") ?? ""),
+      preferred_language: String(form.get("preferred_language") ?? "").trim() || null,
+      communication_preference: String(form.get("communication_preference") ?? "").trim() || null,
+      allergies: String(form.get("allergies") ?? "").trim() || null,
+      medical_notes: String(form.get("medical_notes") ?? "").trim() || null,
+      notes: String(form.get("notes") ?? "").trim() || null,
+    };
+    const result = guest
+      ? await supabase.from("guests").update(values).eq("id", guest.id)
+      : await supabase.from("guests").insert(values);
+    if (result.error) {
+      setError(result.error.message);
+      setSaving(false);
+      return;
+    }
+    onSaved();
+  }
+
+  const inputClass = "w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-purana-green focus:ring-2 focus:ring-purana-green/10";
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
-      <div className="h-full w-full max-w-xl overflow-y-auto bg-white shadow-2xl">
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-5">
-          <div>
-            <h2 className="text-xl font-semibold text-purana-brown">
-              Add Guest
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Create a new guest profile
-            </p>
+      <form onSubmit={saveGuest} className="h-full w-full max-w-xl overflow-y-auto bg-white shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-5"><div><h2 className="text-xl font-semibold text-purana-brown">{guest ? "Edit Guest" : "Add Guest"}</h2><p className="mt-1 text-sm text-gray-500">Save guest details to the guest database.</p></div><button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-2 text-gray-500 hover:bg-purana-soft"><X size={20} /></button></div>
+        <div className="space-y-5 p-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="text-sm font-medium text-gray-700">First name<input required name="first_name" defaultValue={guest?.firstName} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700">Last name<input required name="last_name" defaultValue={guest?.lastName} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700">Email<input name="email" type="email" defaultValue={guest?.email === "—" ? "" : guest?.email} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700">Phone<input name="phone" type="tel" defaultValue={guest?.phone === "—" ? "" : guest?.phone} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700">Guest type<select required name="guest_type" defaultValue={guest?.guestTypeValue ?? ""} className={`${inputClass} mt-2`}><option value="" disabled>Select type</option>{guestTypes.map((type) => <option key={type} value={type}>{type.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())}</option>)}</select></label>
+            <label className="text-sm font-medium text-gray-700">Preferred language<input name="preferred_language" defaultValue={guest?.preferredLanguage === "—" ? "" : guest?.preferredLanguage} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700 sm:col-span-2">Communication preference<input name="communication_preference" defaultValue={guest?.communicationPreference === "—" ? "" : guest?.communicationPreference} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700 sm:col-span-2">Allergies<textarea name="allergies" rows={2} defaultValue={guest?.allergies === "—" ? "" : guest?.allergies} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700 sm:col-span-2">Medical notes<textarea name="medical_notes" rows={3} defaultValue={guest?.medicalNotes === "—" ? "" : guest?.medicalNotes} className={`${inputClass} mt-2`} /></label>
+            <label className="text-sm font-medium text-gray-700 sm:col-span-2">Notes<textarea name="notes" rows={3} defaultValue={guest?.notes === "—" ? "" : guest?.notes} className={`${inputClass} mt-2`} /></label>
           </div>
-
-          <button
-            onClick={onClose}
-            className="rounded-lg p-2 text-gray-500 transition hover:bg-purana-soft hover:text-purana-brown"
-          >
-            <X size={20} />
-          </button>
+          {guestTypes.length === 0 && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">Guest type choices are not available yet. The database needs an existing guest row so the enum values can be loaded.</p>}
+          {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">Unable to save guest: {error}</p>}
+          <div className="flex justify-end gap-3 border-t border-gray-100 pt-5"><button type="button" onClick={onClose} className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-600">Cancel</button><button disabled={saving || guestTypes.length === 0} type="submit" className="rounded-xl bg-purana-green px-5 py-3 text-sm font-medium text-white disabled:opacity-50">{saving ? "Saving…" : guest ? "Save Changes" : "Add Guest"}</button></div>
         </div>
-
-        {/* Form */}
-        <div className="space-y-6 p-6">
-          {/* Guest Type */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-purana-brown">
-              Guest Type
-            </label>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                className="rounded-xl border-2 border-purana-green bg-purana-green/5 px-4 py-3 text-left"
-              >
-                <p className="text-sm font-semibold text-purana-green">
-                  Chalet Guest
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  Guest staying at a Purana chalet
-                </p>
-              </button>
-
-              <button
-                type="button"
-                className="rounded-xl border border-gray-200 px-4 py-3 text-left transition hover:border-purana-green"
-              >
-                <p className="text-sm font-semibold text-purana-brown">
-                  External Guest
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  Guest visiting for treatments only
-                </p>
-              </button>
-            </div>
-          </div>
-
-          {/* Personal Information */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-purana-brown">
-              Personal Information
-            </h3>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Anna"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Müller"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  placeholder="anna@example.com"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  placeholder="+49 170 1234567"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Chalet Information */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-purana-brown">
-              Chalet Information
-            </h3>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Chalet
-              </label>
-
-              <select className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10">
-                <option value="">Select chalet</option>
-                <option>Chalet See</option>
-                <option>Chalet Relax</option>
-                <option>Chalet Strand</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Additional Information */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-purana-brown">
-              Additional Information
-            </h3>
-
-            <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Country
-                </label>
-
-                <input
-                  type="text"
-                  placeholder="Germany"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Notes
-                </label>
-
-                <textarea
-                  rows={4}
-                  placeholder="Add any notes about this guest..."
-                  className="w-full resize-none rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-purana-green focus:ring-2 focus:ring-purana-green/10"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Buttons */}
-          <div className="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              className="rounded-xl bg-purana-green px-5 py-3 text-sm font-medium text-white transition hover:bg-purana-green/90"
-            >
-              Add Guest
-            </button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }

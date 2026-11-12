@@ -9,6 +9,8 @@ import {
 
 export type Therapist = {
   id: string;
+  firstName: string;
+  lastName: string;
   name: string;
   email: string;
   phone: string;

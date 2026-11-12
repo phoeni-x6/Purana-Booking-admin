@@ -2,16 +2,24 @@ import { Users } from "lucide-react";
 
 export type Guest = {
   id: string;
+  firstName: string;
+  lastName: string;
   name: string;
   email: string;
   phone: string;
-  type: "Chalet Guest" | "External Guest";
-  status: "Active" | "Inactive";
+  type: string;
+  status: "With bookings" | "No bookings";
   lastBooking: string;
   totalBookings: number;
   location: string;
   joined: string;
   notes: string;
+  guestTypeValue: string;
+  allergies: string;
+  medicalNotes: string;
+  preferredLanguage: string;
+  communicationPreference: string;
+  recentTreatment: string;
 };
 
 type GuestTableProps = {
@@ -20,7 +28,7 @@ type GuestTableProps = {
 };
 
 function getTypeStyle(type: Guest["type"]) {
-  if (type === "Chalet Guest") {
+  if (type.toLowerCase().includes("chalet")) {
     return "bg-purana-green/10 text-purana-green";
   }
 

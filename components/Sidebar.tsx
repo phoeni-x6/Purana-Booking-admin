@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Role } from "@/lib/auth/require-role";
 import {
   BarChart3,
   CalendarDays,
@@ -21,6 +22,8 @@ import {
 } from "lucide-react";
 
 type SidebarProps = {
+  role: Role;
+  fullName: string;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -128,7 +131,7 @@ const navigation = [
   },
 ];
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ role, fullName, isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -195,14 +198,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 py-5">
           <div className="space-y-6">
-            {navigation.map((section) => (
+            {navigation.map((section) => {
+              const items = role === "admin"
+                ? section.items
+                : section.items.filter((item) => ["/calendar", "/bookings"].includes(item.href));
+              if (items.length === 0) return null;
+
+              return (
               <div key={section.title}>
                 <p className="mb-2 px-3 text-[10px] font-semibold tracking-[0.16em] text-purana-brown/40">
                   {section.title}
                 </p>
 
                 <div className="space-y-1">
-                  {section.items.map((item) => {
+                  {items.map((item) => {
                     const Icon = item.icon;
                     const active = isActive(item.href);
 
@@ -241,7 +250,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   })}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </nav>
 
@@ -249,16 +259,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="border-t border-purana-brown/10 p-4">
           <div className="mb-2 flex items-center gap-3 rounded-xl bg-purana-soft p-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purana-green text-sm font-semibold text-white">
-              A
+                {fullName.slice(0, 1).toUpperCase()}
             </div>
 
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-purana-brown">
-                Admin User
+                {fullName}
               </p>
 
               <p className="truncate text-xs text-purana-brown/50">
-                Administrator
+                {role === "admin" ? "Administrator" : "Therapist"}
               </p>
             </div>
           </div>

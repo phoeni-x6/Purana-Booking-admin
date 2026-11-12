@@ -30,7 +30,7 @@ export default function TherapistStats({
       icon: UserCheck,
     },
     {
-      label: "Available Today",
+      label: "Scheduled Today",
       value: availableToday,
       icon: Activity,
     },

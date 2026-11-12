@@ -13,11 +13,15 @@ import type { Treatment } from "./TreatmentTable";
 type TreatmentDetailsProps = {
   treatment: Treatment;
   onClose: () => void;
+  onEdit: (treatment: Treatment) => void;
+  onToggleAvailability: (treatment: Treatment) => void;
 };
 
 export default function TreatmentDetails({
   treatment,
   onClose,
+  onEdit,
+  onToggleAvailability,
 }: TreatmentDetailsProps) {
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/30">
@@ -153,6 +157,7 @@ export default function TreatmentDetails({
           <div className="flex gap-3 border-t border-gray-100 pt-5">
             <button
               type="button"
+              onClick={() => onEdit(treatment)}
               className="flex-1 rounded-xl border border-purana-green px-4 py-3 text-sm font-medium text-purana-green transition hover:bg-purana-green/5"
             >
               Edit Treatment
@@ -160,9 +165,10 @@ export default function TreatmentDetails({
 
             <button
               type="button"
+              onClick={() => onToggleAvailability(treatment)}
               className="flex-1 rounded-xl bg-purana-green px-4 py-3 text-sm font-medium text-white transition hover:bg-purana-green/90"
             >
-              Manage Availability
+              {treatment.availability === "Available for booking" ? "Pause bookings" : "Resume bookings"}
             </button>
           </div>
         </div>

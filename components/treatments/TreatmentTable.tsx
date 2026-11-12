@@ -17,6 +17,8 @@ export type Treatment = {
   availability: string;
   therapists: number;
   bookings: number;
+  currency?: string;
+  notes?: string;
 };
 
 type TreatmentTableProps = {

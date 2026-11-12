@@ -8,11 +8,13 @@ import {
   Phone,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import type { Guest } from "./GuestTable";
 
 type GuestDetailsProps = {
   guest: Guest;
   onClose: () => void;
+  onEdit: (guest: Guest) => void;
 };
 
 function getTypeStyle(type: Guest["type"]) {
@@ -34,6 +36,7 @@ function getStatusStyle(status: Guest["status"]) {
 export default function GuestDetails({
   guest,
   onClose,
+  onEdit,
 }: GuestDetailsProps) {
   const initials = guest.name
     .split(" ")
@@ -216,18 +219,14 @@ export default function GuestDetails({
             <div className="rounded-xl border border-purana-brown/10 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-purana-brown">
-                    Ayurvedic Treatment
-                  </p>
+                  <p className="text-sm font-semibold text-purana-brown">{guest.recentTreatment}</p>
 
                   <p className="mt-1 text-xs text-purana-brown/50">
                     {guest.lastBooking}
                   </p>
                 </div>
 
-                <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
-                  Completed
-                </span>
+                <span className="rounded-full bg-purana-soft px-2.5 py-1 text-xs font-semibold text-purana-brown">{guest.totalBookings ? "Booking recorded" : "No bookings"}</span>
               </div>
             </div>
           </section>
@@ -251,15 +250,10 @@ export default function GuestDetails({
                   Questionnaire
                 </p>
 
-                <p className="mt-1 text-xs text-purana-brown/50">
-                  Guest health information
-                </p>
+                <p className="mt-1 text-xs text-purana-brown/50">Stored health information</p>
               </div>
-
-              <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
-                Completed
-              </span>
             </div>
+            <div className="mt-3 space-y-3 rounded-xl bg-purana-soft p-4 text-sm"><p><span className="font-medium">Allergies:</span> {guest.allergies}</p><p><span className="font-medium">Medical notes:</span> {guest.medicalNotes}</p><p><span className="font-medium">Preferred language:</span> {guest.preferredLanguage}</p><p><span className="font-medium">Communication:</span> {guest.communicationPreference}</p></div>
           </section>
 
           {/* Notes */}
@@ -281,17 +275,13 @@ export default function GuestDetails({
           <div className="flex gap-3">
             <button
               type="button"
+              onClick={() => onEdit(guest)}
               className="flex-1 rounded-xl border border-purana-brown/10 px-4 py-2.5 text-sm font-semibold text-purana-brown transition hover:bg-purana-soft"
             >
               Edit Guest
             </button>
 
-            <button
-              type="button"
-              className="flex-1 rounded-xl bg-purana-green px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-purana-green/90"
-            >
-              View Bookings
-            </button>
+            <Link href={`/bookings?guest_id=${encodeURIComponent(guest.id)}`} className="flex-1 rounded-xl bg-purana-green px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-purana-green/90">View Bookings</Link>
           </div>
         </div>
       </div>

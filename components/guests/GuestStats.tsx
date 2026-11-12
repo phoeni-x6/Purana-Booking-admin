@@ -41,7 +41,7 @@ export default function GuestStats({
       valueClass: "text-purana-brown",
     },
     {
-      label: "Active Guests",
+      label: "Guests With Bookings",
       value: activeGuests,
       icon: UserCheck,
       iconClass: "bg-green-50 text-green-600",

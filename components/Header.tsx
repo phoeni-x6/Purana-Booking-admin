@@ -7,12 +7,15 @@ import {
   Search,
   UserRound,
 } from "lucide-react";
+import type { Role } from "@/lib/auth/require-role";
 
 type HeaderProps = {
+  role: Role;
+  fullName: string;
   onMenuClick: () => void;
 };
 
-export default function Header({ onMenuClick }: HeaderProps) {
+export default function Header({ role, fullName, onMenuClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-purana-brown/10 bg-white/95 px-4 backdrop-blur-md sm:px-6 lg:px-8">
       {/* Left */}
@@ -66,16 +69,16 @@ export default function Header({ onMenuClick }: HeaderProps) {
           className="flex items-center gap-3 rounded-xl p-1.5 transition hover:bg-purana-soft"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purana-green text-sm font-semibold text-white">
-            A
+                {fullName.slice(0, 1).toUpperCase()}
           </div>
 
           <div className="hidden text-left sm:block">
             <p className="text-sm font-semibold text-purana-brown">
-              Admin
+              {fullName}
             </p>
 
             <p className="text-[11px] text-purana-brown/50">
-              Administrator
+              {role === "admin" ? "Administrator" : "Therapist"}
             </p>
           </div>
 

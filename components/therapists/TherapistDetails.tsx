@@ -14,11 +14,13 @@ import type { Therapist } from "./TherapistTable";
 type TherapistDetailsProps = {
   therapist: Therapist;
   onClose: () => void;
+  onEdit: (therapist: Therapist) => void;
 };
 
 export default function TherapistDetails({
   therapist,
   onClose,
+  onEdit,
 }: TherapistDetailsProps) {
   const initials = therapist.name
     .split(" ")
@@ -229,6 +231,7 @@ export default function TherapistDetails({
           <div className="flex gap-3 border-t border-gray-100 pt-5">
             <button
               type="button"
+              onClick={() => onEdit(therapist)}
               className="flex-1 rounded-xl border border-purana-green px-4 py-3 text-sm font-medium text-purana-green transition hover:bg-purana-green/5"
             >
               Edit Therapist

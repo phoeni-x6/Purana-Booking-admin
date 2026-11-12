@@ -10,6 +10,7 @@ import {
 
 export type Booking = {
   id: string;
+  displayId: string;
   guest: string;
   email: string;
   phone: string;

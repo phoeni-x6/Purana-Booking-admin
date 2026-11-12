@@ -9,6 +9,7 @@ type TreatmentFiltersProps = {
   onSearchChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
   onStatusChange: (value: string) => void;
+  categories: string[];
 };
 
 export default function TreatmentFilters({
@@ -18,6 +19,7 @@ export default function TreatmentFilters({
   onSearchChange,
   onCategoryChange,
   onStatusChange,
+  categories,
 }: TreatmentFiltersProps) {
   return (
     <div className="mb-6 rounded-2xl border border-purana-brown/10 bg-white p-4 shadow-sm">
@@ -51,12 +53,7 @@ export default function TreatmentFilters({
             className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-purana-brown outline-none focus:border-purana-green"
           >
             <option value="All">All Categories</option>
-            <option value="Massage">Massage</option>
-            <option value="Therapy">Therapy</option>
-            <option value="Consultation">Consultation</option>
-            <option value="Shirodhara">Shirodhara</option>
-            <option value="Yoga">Yoga</option>
-            <option value="Wellness">Wellness</option>
+            {categories.map((category) => <option key={category} value={category}>{category}</option>)}
           </select>
         </div>
 

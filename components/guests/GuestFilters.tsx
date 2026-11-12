@@ -7,6 +7,7 @@ type GuestFiltersProps = {
   typeFilter: string;
   onSearchChange: (value: string) => void;
   onTypeChange: (value: string) => void;
+  types: string[];
 };
 
 export default function GuestFilters({
@@ -14,8 +15,9 @@ export default function GuestFilters({
   typeFilter,
   onSearchChange,
   onTypeChange,
+  types,
 }: GuestFiltersProps) {
-  const filters = ["All", "Chalet Guest", "External Guest"];
+  const filters = ["All", ...types];
 
   return (
     <div className="mb-6 rounded-2xl border border-purana-brown/10 bg-white p-4 shadow-sm">
